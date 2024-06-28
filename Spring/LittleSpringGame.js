@@ -1,6 +1,9 @@
 /*
-@title: Little Spring Game
-@author: Jonas Heilig
+First time? Check out the tutorial game:
+https://sprig.hackclub.com/gallery/getting_started
+
+@title: 
+@author: 
 @tags: []
 @addedOn: 2024-00-00
 */
@@ -47,7 +50,7 @@ const backgroundTune = tune`
 playTune(backgroundTune, Infinity)
 
 setLegend(
-  [ player, bitmap`
+  [player, bitmap`
 ................
 ................
 ................
@@ -63,8 +66,8 @@ setLegend(
 ................
 ................
 ................
-................` ],
-  [ box, bitmap`
+................`],
+  [box, bitmap`
 ................
 ................
 ..CCCCCCCCCCCC..
@@ -80,8 +83,8 @@ setLegend(
 ..CCCFCCCCFCCC..
 ..CCCCCCCCCCCC..
 ................
-................` ],
-  [ background, bitmap`
+................`],
+  [background, bitmap`
 DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
@@ -97,8 +100,8 @@ DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
-DDDDDDDDDDDDDDDD` ],
-  [ hous, bitmap`
+DDDDDDDDDDDDDDDD`],
+  [hous, bitmap`
 7777777777777777
 7777CCCCCCCC7777
 777CCCCCCCCCC777
@@ -114,8 +117,8 @@ C77CC66CC66CC77C
 777CCCCCCCCCC777
 777C6C99C666C777
 777CCC99C666C777
-444CCC99CCCCC444` ],
-  [ wall, bitmap`
+444CCC99CCCCC444`],
+  [wall, bitmap`
 1111111111111111
 1111111111111111
 11LLLLLLLLLLLL11
@@ -131,7 +134,7 @@ C77CC66CC66CC77C
 11LLLLLLLLLLLL11
 11LLLLLLLLLLLL11
 1111111111111111
-1111111111111111` ],
+1111111111111111`],
 )
 
 setSolids([player, wall, box])
@@ -139,6 +142,7 @@ setBackground(background)
 
 let level = 0
 let text_level = 1
+let playable_levels = 1
 const levels = [
   map`
 p.w.......
@@ -150,59 +154,86 @@ wwwwww...w
 .w........
 .wh.......`,
   map`
-p.........
-..........
-...ww.....
-....www...
-......wwww
-..........
-..........
-..h.......`,
-  map`
-p.........
-..........
-..kk......
-..kkkk....
-..........
-..........
-..........
-..h.......`,
-  map`
-p.........
-..........
-..........
-..........
-..........
-..........
-..........
-..h.......`,
-  map`
-p.........
-..........
-...h......
-...hhh....
-..........
-..........
-..........
-..h.......`,
-  map`
-p.........
-..........
-..w.......
+p.w.......
 ..ww......
-....wwww..
-..........
-..........
-..h.......`,
+..w.wwww..
+..w..k..w.
+..wkww.www
+....ww...w
+wwwwww..hw
+.....wwwww`,
   map`
-p.........
-...bb.....
-.kk.bb....
-..kk......
-...hh.....
-....h.....
+wwwwwwwww.
+....k...w.
+w.wwwww.w.
+w.w.w.w.w.
+w.w.w..k.w
+w.w.wkwww.
+whw.w....k
+.w...wwwwp`,
+  map`
 ..........
-..h.......`,
+w.w.wwwww.
+w.w.......
+w.wkwwwwww
+w.w.w.....
+w.w.w.www.
+w.w.w.w.w.
+whw...w.wp`,
+  map`
+wwwwwwww.w
+w...k....w
+ww.wwwwwkw
+.w.wp....w
+.w.wwwwwww
+.w........
+.w.wwwww.w
+.www...whw`,
+  map`
+wwwwww.ww.
+wwhw......
+w..kkwwkw.
+wwww.w..wk
+.w.ww..w..
+.w..wkw...
+kwwww.ww..
+pk.....w..`,
+  map`
+wwwww.w.w.
+w.....w...
+w...w.w.w.
+ww.wwkw.wk
+wwkww.w.w.
+ww.ww.w.w.
+wh.ww.w.w.
+ww.ww...wp`,
+  map`
+wwwwwwwww
+w.....k.w
+wkk.k..kw
+w....pk.w
+w..k...kw
+w...kkk.w
+wh....k.w
+wwwwwwwww`,
+  map`
+....w.wwww
+....w.k..w
+wwwww.w.ww
+p...wkw..w
+www.w.ww.w
+..w.k..w.w
+..wwwwwwhw
+.......www`,
+  map`
+wwwwwww.w.
+w.k.....w.
+ww.wwwwkw.
+.wkwwww.ww
+.w...w.kpw
+.w.w.wwwww
+..ww.....h
+..wwwwwwww`,
   map`
 ..........
 ...wwwww..
@@ -212,12 +243,13 @@ p.........
 ...wwwww..
 ..........
 ..........`,
+
 ]
 
 setMap(levels[level])
 
 setPushables({
-  [ player ]: [box]
+  [player]: [box]
 })
 
 onInput("s", () => {
@@ -236,19 +268,19 @@ onInput("j", () => {
   setMap(levels[level])
 })
 
-addText("Press J to rest", {x:2, y:7, color:color`9`})
+addText("Press J to rest", { x: 2, y: 7, color: color`9` })
 
 
 afterInput(() => {
   clearText();
-  if(tilesWith(player, hous).length >= 1){
-    addText("Level " + text_level + ", compleated", {x:1, y:7, color:color`9`})
+  if (tilesWith(player, hous).length >= 1) {
+    addText("Level " + text_level + ", compleated", { x: 1, y: 7, color: color`9` })
     level = level + 1
     text_level = text_level + 1
     setMap(levels[level])
   }
-  if(level >6){
-    addText("You won!", {x:7, y:7, color:color`9`})
-    addText("Game is Finish!", {x:2, y:9, color:color`9`})
+  if (level >= playable_levels) {
+    addText("You won!", { x: 7, y: 7, color: color`9` })
+    addText("Game is Finish!", { x: 2, y: 9, color: color`9` })
   }
 })
