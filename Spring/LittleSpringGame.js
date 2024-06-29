@@ -2,8 +2,8 @@
 First time? Check out the tutorial game:
 https://sprig.hackclub.com/gallery/getting_started
 
-@title: 
-@author: 
+@title: Little Spring Game
+@author: Jonas Heilig
 @tags: []
 @addedOn: 2024-00-00
 */
@@ -142,7 +142,7 @@ setBackground(background)
 
 let level = 0
 let text_level = 1
-let playable_levels = 1
+let playable_levels = 10
 const levels = [
   map`
 p.w.......
@@ -184,9 +184,9 @@ whw...w.wp`,
 wwwwwwww.w
 w...k....w
 ww.wwwwwkw
-.w.wp....w
+.wkwp....w
 .w.wwwwwww
-.w........
+.w...k....
 .w.wwwww.w
 .www...whw`,
   map`
@@ -195,7 +195,7 @@ wwhw......
 w..kkwwkw.
 wwww.w..wk
 .w.ww..w..
-.w..wkw...
+.w..wk.w..
 kwwww.ww..
 pk.....w..`,
   map`
