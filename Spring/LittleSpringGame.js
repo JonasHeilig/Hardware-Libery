@@ -2,7 +2,7 @@
 First time? Check out the tutorial game:
 https://sprig.hackclub.com/gallery/getting_started
 
-@title: Little Spring Game
+@title: LittleSpringGame
 @author: Jonas Heilig
 @tags: []
 @addedOn: 2024-00-00
@@ -190,7 +190,7 @@ ww.wwwwwkw
 .w.wwwww.w
 .www...whw`,
   map`
-wwwwww.ww.
+wwwwwww.ww
 wwhw......
 w..kkwwkw.
 wwww.w..wk
@@ -209,9 +209,9 @@ wh.ww.w.w.
 ww.ww...wp`,
   map`
 wwwwwwwww
-w.....k.w
+w..k..k.w
 wkk.k..kw
-w....pk.w
+w.k..pk.w
 w..k...kw
 w...kkk.w
 wh....k.w
