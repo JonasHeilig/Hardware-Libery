@@ -2,7 +2,7 @@
 First time? Check out the tutorial game:
 https://sprig.hackclub.com/gallery/getting_started
 
-@title: LittleSpringGame
+@title: Little Spring Game
 @author: Jonas Heilig
 @tags: []
 @addedOn: 2024-00-00
@@ -10,9 +10,13 @@ https://sprig.hackclub.com/gallery/getting_started
 
 const player = "p"
 const box = "k"
+const catbox = "b"
 const background = "b"
 const hous = "h"
+const cat = "c"
+const cathous = "z"
 const wall = "w"
+const destroyablething = "d"
 const backgroundTune = tune`
 172.41379310344828: D4~172.41379310344828,
 172.41379310344828: D4~172.41379310344828,
@@ -84,6 +88,23 @@ setLegend(
 ..CCCCCCCCCCCC..
 ................
 ................`],
+  [catbox, bitmap`
+................
+................
+..333333333333..
+..333733337333..
+..333733337333..
+..377777777773..
+..333733337333..
+..333733337333..
+..333733337333..
+..333733337333..
+..377777777773..
+..333733337333..
+..333733337333..
+..333333333333..
+................
+................`],
   [background, bitmap`
 DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
@@ -118,6 +139,40 @@ C77CC66CC66CC77C
 777C6C99C666C777
 777CCC99C666C777
 444CCC99CCCCC444`],
+  [cat, bitmap`
+................
+................
+................
+................
+................
+................
+..........00000.
+.........0002200
+........00000200
+.....0000000000.
+...00000000000..
+...0000000000...
+..00000000000...
+..000000000000..
+..0000....0000..
+..000.....000...`],
+  [cathous, bitmap`
+1111111111111111
+1111CCCCCCCC1111
+111CCCCCCCCCC111
+11CCCCCCCCCCCC11
+1CCCCC2222CCCCC1
+CCCCCCCCCCCCCCCC
+C11CC66CC66CC11C
+111CC66CC66CC111
+111CCCCCCCCCC111
+111CCC6666CCC111
+111CCC6666CCC111
+111CCCCCCCCCC111
+111CCCCCCCCCC111
+111C6C99C666C111
+111CCC99C666C111
+000CCC99CCCCC000`],
   [wall, bitmap`
 1111111111111111
 1111111111111111
@@ -135,24 +190,43 @@ C77CC66CC66CC77C
 11LLLLLLLLLLLL11
 1111111111111111
 1111111111111111`],
+  [destroyablething, bitmap`
+L1LL1111111L1LL1
+L1111LL1LLLL11L1
+LLL1L11LL11LLLLL
+1LLLLLL1LL1LLL1L
+1L11LLLLL1LLLL11
+1LLLL1LLL1L1LL11
+LLLLLLLL11L1LL11
+L1L11111LLLLL11L
+L1LL11LLLLL11L1L
+L1L11L1L1LL11L11
+L1L1LL1LLLL1LL1L
+L11LL1LLLLL1LL11
+L11LL11L1LL11LLL
+L1LL1L1LL1LLLLLL
+1LL11LL111L1L1LL
+11LLL1LLLLLL11L1`],
 )
 
-setSolids([player, wall, box])
+setSolids([player, wall, box, catbox, cat])
 setBackground(background)
 
 let level = 0
 let text_level = 1
 let playable_levels = 10
+let destroyabelthinksperlevel = 5
+let thinksdestoy = 0
 const levels = [
   map`
 p.w.......
 ..w.......
-..wwwwwww.
-.....k..ww
-wwwwww...w
+d.wwwwwww.
+.d.d.k..ww
+wwwwww..dw
 .ww..www.w
 .w........
-.wh.......`,
+.wh....d..`,
   map`
 p.w.......
 ..ww......
@@ -266,18 +340,41 @@ onInput("d", () => {
 })
 onInput("j", () => {
   setMap(levels[level])
+  thinksdestoy = 0
 })
 
-addText("Press J to rest", { x: 2, y: 7, color: color`9` })
 
+onInput("k", () => {
+  const playerPosition = getFirst(player);
+  const destroyableThingsAtPlayerPosition = tilesWith(playerPosition.x, playerPosition.y, destroyablething);
+  
+  if (destroyableThingsAtPlayerPosition.length > 0) {
+    console.log("Zerstörbares Objekt gefunden und wird entfernt.");
+    
+    const destroyableObject = destroyableThingsAtPlayerPosition[0];
+    destroyableObject.remove();
+    console.log("Zerstörbares Objekt wurde erfolgreich entfernt.");
+    
+    thinksdestoy += 1;
+  } else {
+    console.log("Kein zerstörbares Objekt gefunden.");
+  }
+});
+
+
+addText("Press J to rest", { x: 2, y: 7, color: color`9` })
+  
 
 afterInput(() => {
   clearText();
-  if (tilesWith(player, hous).length >= 1) {
-    addText("Level " + text_level + ", compleated", { x: 1, y: 7, color: color`9` })
-    level = level + 1
-    text_level = text_level + 1
-    setMap(levels[level])
+  if (thinksdestoy == destroyabelthinksperlevel){
+    if (tilesWith(player, hous).length >= 1) {
+      addText("Level " + text_level + ", compleated", { x: 1, y: 7, color: color`9` })
+      level = level + 1
+      text_level = text_level + 1
+      thinksdestoy = 0
+      setMap(levels[level])
+    }
   }
   if (level >= playable_levels) {
     addText("You won!", { x: 7, y: 7, color: color`9` })
