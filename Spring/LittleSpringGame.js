@@ -230,83 +230,83 @@ wwwwww..dw
   map`
 p.w.......
 ..ww......
-..w.wwww..
+d.w.wwww..
 ..w..k..w.
 ..wkww.www
-....ww...w
-wwwwww..hw
+..d.wwd.dw
+wwwwww.dhw
 .....wwwww`,
   map`
 wwwwwwwww.
-....k...w.
-w.wwwww.w.
+....kd..w.
+w.wwwwwdw.
 w.w.w.w.w.
-w.w.w..k.w
+wdw.w.dk.w
 w.w.wkwww.
-whw.w....k
+whw.w..d.k
 .w...wwwwp`,
   map`
-..........
+...d......
 w.w.wwwww.
 w.w.......
 w.wkwwwwww
-w.w.w.....
-w.w.w.www.
+wdw.w...d.
+w.wdw.www.
 w.w.w.w.w.
-whw...w.wp`,
+whw..dw.wp`,
   map`
 wwwwwwww.w
-w...k....w
+w.d.k.d..w
 ww.wwwwwkw
-.wkwp....w
+.wkwpd...w
 .w.wwwwwww
-.w...k....
+.wd..k..d.
 .w.wwwww.w
 .www...whw`,
   map`
 wwwwwww.ww
-wwhw......
+wwhw.d....
 w..kkwwkw.
 wwww.w..wk
-.w.ww..w..
+.w.ww..wd.
 .w..wk.w..
 kwwww.ww..
-pk.....w..`,
+pkd..d.w.d`,
   map`
-wwwww.w.w.
-w.....w...
-w...w.w.w.
+wwwww.wdw.
+w..d..w...
+wd..w.w.w.
 ww.wwkw.wk
-wwkww.w.w.
+wwkww.wdw.
 ww.ww.w.w.
 wh.ww.w.w.
-ww.ww...wp`,
+ww.wwd..wp`,
   map`
 wwwwwwwww
-w..k..k.w
-wkk.k..kw
-w.k..pk.w
-w..k...kw
-w...kkk.w
-wh....k.w
+wd.....dw
+w....k..w
+w..dkpk.w
+w....k..w
+w.......w
+wh.d..d.w
 wwwwwwwww`,
   map`
 ....w.wwww
-....w.k..w
+....wdkd.w
 wwwww.w.ww
-p...wkw..w
-www.w.ww.w
-..w.k..w.w
+p.d.wkw..w
+www.w.wwdw
+..w.kd.w.w
 ..wwwwwwhw
 .......www`,
   map`
 wwwwwww.w.
-w.k.....w.
+w.k.d...w.
 ww.wwwwkw.
-.wkwwww.ww
-.w...w.kpw
+.wkwwwwdww
+.w.d.w.kpw
 .w.w.wwwww
-..ww.....h
+..ww.d.d.h
 ..wwwwwwww`,
   map`
 ..........
@@ -346,20 +346,25 @@ onInput("j", () => {
 
 onInput("k", () => {
   const playerPosition = getFirst(player);
-  const destroyableThingsAtPlayerPosition = tilesWith(playerPosition.x, playerPosition.y, destroyablething);
+  const playerX = playerPosition.x;
+  const playerY = playerPosition.y;
+  
+  const destroyableThingsAtPlayerPosition = getTile(playerX, playerY).filter(tile => tile.type === destroyablething);
   
   if (destroyableThingsAtPlayerPosition.length > 0) {
-    console.log("Zerstörbares Objekt gefunden und wird entfernt.");
+    console.log("Destroyable object found and will be removed.");
     
     const destroyableObject = destroyableThingsAtPlayerPosition[0];
     destroyableObject.remove();
-    console.log("Zerstörbares Objekt wurde erfolgreich entfernt.");
+    console.log("Destroyable object was successfully removed.");
     
     thinksdestoy += 1;
   } else {
-    console.log("Kein zerstörbares Objekt gefunden.");
+    console.log("No destroyable object found.");
   }
 });
+
+
 
 
 addText("Press J to rest", { x: 2, y: 7, color: color`9` })
